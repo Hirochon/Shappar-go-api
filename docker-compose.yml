@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  api:
+    build: ./
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./api:/go/src/work
+    working_dir: /go/src/work
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_PORT
+      - MYSQL_HOST
+
+  mysql:
+    image: mysql:5.7.31
+    environment:
+      - MYSQL_USER
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./tmp/config:/etc/mysql/conf.d
+
+volumes:
+  mysql-data:
+    driver: local
